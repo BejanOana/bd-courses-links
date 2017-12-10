@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Contact Form</title>
+    </head>
+    <body>
+        <form method="POST" action="/send">
+            Name: <br/>
+            <input type="text" name="firstName"/>
+            <input type="submit" value="Submit"/>
+        </form>
+        <br/>
+        <a href="/courses">Testare metoda GET /courses</a>
+        
+        <br/>
+        <a href="/courses/1">Testare metoda GET /courses/1</a>
+        
+        <br/>
+        <br/>
+        <br/>
+        Testare metoda POST /courses
+        <form method="POST" action="/courses">
+            Nume: <br/>
+            <input type="text" name="name"/> <br/>
+            Descriere: <br/>
+            <input type="text" name="description"/> <br/>
+            <input type="submit" value="Submit"/>
+        </form>
+        
+        
+        
+        
+        
+         <form method="POST" action="/send">
+            Name: <br/>
+            <input type="text" name="firstName"/>
+            <input type="submit" value="Submit"/>
+        </form>
+        <br/>
+        <a href="/links">Testare metoda GET /links</a>
+        
+        <br/>
+        <a href="/links/1">Testare metoda GET /links/1</a>
+        
+        <br/>
+        <br/>
+        <br/>
+        Testare metoda POST /links
+        <form method="POST" action="/links">
+            Nume: <br/>
+            <input type="text" name="name"/> <br/>
+            Descriere: <br/>
+            <input type="text" name="description"/> <br/>
+            <input type="submit" value="Submit"/>
+        </form>
+    </body>
+</html>

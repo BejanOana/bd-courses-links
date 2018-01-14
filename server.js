@@ -27,13 +27,13 @@ var Courses = sequelize.define('courses', {
 
 var Links = sequelize.define('links', {
     name: Sequelize.STRING,
-    cours_id: Sequelize.INTEGER,
+    courseId: Sequelize.INTEGER,
     description: Sequelize.STRING,
     rating: Sequelize.INTEGER,
 })
 
-Links.belongsTo(Courses, {foreignKey: 'cours_id', targetKey: 'id'})
-//courses.hasMany(links)
+Courses.hasMany(Links);
+Links.belongsTo(Courses, {foreignKey: 'courseId'});
 
 var app = express()
 
@@ -44,7 +44,7 @@ app.use(express.static('public'))
 app.use('/admin', express.static('admin'))
 
 app.use(express.json());       // to support JSON-encoded bodies
-app.use(express.urlencoded()); // to support URL-encoded bodies
+//app.use(express.urlencoded()); // to support URL-encoded bodies
 
 // get a list of courses
 app.get('/courses', function(request, response) {
@@ -54,29 +54,30 @@ app.get('/courses', function(request, response) {
         
 })
 
-// get one cours by id
+// get one course by id
 app.get('/courses/:id', function(request, response) {
-    Courses.findOne({where: {id:request.params.id}}).then(function(courses) {
-        if(courses) {
-            response.status(200).send(courses)
+    Courses.findOne({where: {id:request.params.id}}).then(function(course) {
+        if(course) {
+            response.status(200).send(course)
         } else {
             response.status(404).send()
         }
     })
 })
 
-//create a new cours
+//create a new course
 app.post('/courses', function(request, response) {
-    Courses.create(request.body).then(function(courses) {
-        response.status(201).send(courses)
+    Courses.create(request.body).then(function(cours) {
+        response.status(201).send(cours)
     })
 })
 
+//update the course
 app.put('/courses/:id', function(request, response) {
-    Courses.findById(request.params.id).then(function(courses) {
-        if(courses) {
-            courses.update(request.body).then(function(courses){
-                response.status(201).send(courses)
+    Courses.findById(request.params.id).then(function(course) {
+        if(course) {
+            course.update(request.body).then(function(course){
+                response.status(201).send(course)
             }).catch(function(error) {
                 response.status(200).send(error)
             })
@@ -86,10 +87,11 @@ app.put('/courses/:id', function(request, response) {
     })
 })
 
+//delete course
 app.delete('/courses/:id', function(request, response) {
-    Courses.findById(request.params.id).then(function(courses) {
-        if(courses) {
-            courses.destroy().then(function(){
+    Courses.findById(request.params.id).then(function(cours) {
+        if(cours) {
+            cours.destroy().then(function(){
                 response.status(204).send()
             })
         } else {
@@ -98,22 +100,16 @@ app.delete('/courses/:id', function(request, response) {
     })
 })
 
+//get links
 app.get('/links', function(request, response) {
-    Links.findAll(
-        {
-            include: [{
-                model: Courses,
-                where: { id: Sequelize.col('links.cours_id') }
-            }]
-        }
-        
-        ).then(
+    Links.findAll().then(
             function(links) {
                 response.status(200).send(links)
             }
         )
 })
 
+//get link
 app.get('/links/:id', function(request, response) {
     Links.findById(request.params.id).then(
             function(links) {
@@ -122,17 +118,19 @@ app.get('/links/:id', function(request, response) {
         )
 })
 
+//create a link
 app.post('/links', function(request, response) {
-    Links.create(request.body).then(function(links) {
-        response.status(201).send(links)
+    Links.create(request.body).then(function(link) {
+        response.status(201).send(link)
     })
 })
 
+//update link
 app.put('/links/:id', function(request, response) {
-    Links.findById(request.params.id).then(function(links) {
-        if(links) {
-            links.update(request.body).then(function(links){
-                response.status(201).send(links)
+    Links.findById(request.params.id).then(function(link) {
+        if(link) {
+            link.update(request.body).then(function(link){
+                response.status(201).send(link)
             }).catch(function(error) {
                 response.status(200).send(error)
             })
@@ -142,10 +140,11 @@ app.put('/links/:id', function(request, response) {
     })
 })
 
+//delete link
 app.delete('/links/:id', function(request, response) {
-    Links.findById(request.params.id).then(function(links) {
-        if(links) {
-            links.destroy().then(function(){
+    Links.findById(request.params.id).then(function(link) {
+        if(link) {
+            link.destroy().then(function(){
                 response.status(204).send()
             })
         } else {
@@ -155,7 +154,7 @@ app.delete('/links/:id', function(request, response) {
 })
 
 app.get('/courses/:id/links', function(request, response) {
-    Links.findAll({where:{cours_id: request.params.id}}).then(
+    Links.findAll({where:{courseId: request.params.id}}).then(
             function(links) {
                 response.status(200).send(links)
             }
